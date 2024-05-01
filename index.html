@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Pour Over Coffee Calculator 手沖咖啡計算機</h1>
+
+<fieldset>
+<legend><h2>Parameters 參數設定</h2></legend>
+
+<label for="coffeeWeight">Coffee Weight 咖啡豆重量</label>
+<input type="number" id="coffeeWeight" name="coffeeWeight"> g 克 <br><br>
+
+<p>Coffee To Water Ratio 咖啡粉水比</p>
+  <input type="radio" id="oneToCoffeeRatio" name="coffeeRatio" value="oneToCoffeeRatio" checked="checked">
+  <label for="oneToCoffeeRatio">One Coffee To How Many Water 幾克粉多少水</label> 1 : <input type="number" id="oneToCoffeeRatioInput" name="oneToCoffeeRatioInput"><br><br>
+  <input type="radio" id="coffeePerLiter" name="coffeeRatio" value="coffeePerLiter">
+  <label for="coffeePerLiter">How Many Coffee Per Liter Water 每公升多少水 </label><input type="number" id="coffeePerLiterInput" name="coffeePerLiterInput"><br><br>
+ 
+<label for="firstStageWater">First Stage Water Percentage 第一次注水量</label>
+<input type="range" value="0" min="0" max="100" step="5" oninput="this.nextElementSibling.value = this.value" id="firstStageWater" name="firstStageWater"> <output id="firstStageWaterValue">0</output> % <br><br>
+
+</fieldset>
+
+<br><br>
+<button onclick="RecommendSettings()">Recommend Settings 建議設定</button>
+<button onclick="ExecuteCalculation()">Execute Calculation 執行計算</button>
+<button onclick="ClearData()">Clear Data 清除資料</button>
+
+<br><br>
+<hr>
+
+<fieldset>
+<legend><h2>Calculation Results 計算結果</h2></legend>
+<p>Blooming Stage 悶蒸水量</p>
+<p>
+<span>Up To 至 </span>
+<span style="font-size:2em;" id="steamingWaterResults">0</span> g 克
+</p>
+
+<p>First Pour Stage 第一段水量</p>
+<p>
+<span>Up To 至 </span>
+<span style="font-size:2em;" id="firstStageWaterResults">0</span> g 克
+</p>
+
+<p>Second Pour Stage 第二段水量</p>
+<p>
+<span>Up To 至 </span>
+<span style="font-size:2em;" id="secondStageWaterResults">0</span> g 克
+</p>
+</fieldset>
+
+<br><br>
+
+<hr>
+
+
+<fieldset>
+<legend><h2>Calculation Equation 計算公式</h2></legend>
+<p>Blooming Stage 悶蒸水量 = Coffee Weight 咖啡豆重量 * 2</p>
+<p>First Pour Stage 第一段水量 = Coffee Weight 咖啡豆重量 * Coffee To Water Ratio 粉水比 * First Stage Water Percentage 第一次注水量 * 100%</p>
+<p>Second Pour Stage 第二段水量 = Coffee Weight 咖啡豆重量 * Coffee To Water Ratio 粉水比</p>
+</fieldset>
+
+<br><br>
+
+<hr>
+
+<fieldset>
+<legend><h2>About This App 關於此應用</h2></legend>
+<p>Pour Over Coffee Calculator 手沖咖啡計算機</p>
+<p>The Joy of Pour Over Coffee For Everyone To Enjoy 讓每個人都能享受手沖咖啡的樂趣</p>
+<p>Version 版本號：0.1 (May 01, 2024 / 2024年05月01日)</p>
+<p>Inital Release 初始版本</p>
+</fieldset>
+
+<script>
+
+function RecommendSettings() {
+	var coffeeRatioChoice = document.querySelector('input[name="coffeeRatio"]:checked').value;
+	
+	if (coffeeRatioChoice == "oneToCoffeeRatio") {
+		let oneToCoffeeRatioInput = document.getElementById("oneToCoffeeRatioInput");
+		oneToCoffeeRatioInput.value = "16";
+	} else {
+		let coffeePerLiterInput = document.getElementById("coffeePerLiterInput");
+		coffeePerLiterInput.value = "60";
+	}
+
+	let firstStageWater = document.getElementById("firstStageWater");
+	firstStageWater.value = "60";
+
+	let firstStageWaterValue = document.getElementById("firstStageWaterValue");
+	firstStageWaterValue.textContent = "60";
+}
+
+function ClearData() {
+	let coffeeWeight = document.getElementById("coffeeWeight");
+	coffeeWeight.value = "";
+
+	let oneToCoffeeRatioInput = document.getElementById("oneToCoffeeRatioInput");
+	oneToCoffeeRatioInput.value = "";
+	
+	let coffeePerLiterInput = document.getElementById("coffeePerLiterInput");
+	coffeePerLiterInput.value = "";
+
+	let firstStageWater = document.getElementById("firstStageWater");
+	firstStageWater.value = "0";
+
+	let firstStageWaterValue = document.getElementById("firstStageWaterValue");
+	firstStageWaterValue.textContent = "0";
+}
+
+function ExecuteCalculation() {
+	
+	let coffeeWeight = document.getElementById("coffeeWeight");
+	if (!coffeeWeight.checkValidity()) {
+		window.alert("Error! Coffee Weight Format Invalid 錯誤！咖啡豆重量格式有誤");
+		return
+	}
+	var coffeeWeightInput = coffeeWeight.value;
+	if (coffeeWeightInput == 0) {
+		window.alert("Error! Coffee Weight Format Invalid 錯誤！咖啡豆重量格式有誤");
+		return
+	}
+	
+	var coffeeRatioChoice = document.querySelector('input[name="coffeeRatio"]:checked').value;
+	
+	if(coffeeRatioChoice == "oneToCoffeeRatio") {
+		let oneToCoffeeRatioInput = document.getElementById("oneToCoffeeRatioInput");
+		if (!oneToCoffeeRatioInput.checkValidity()) {
+			window.alert("Error! Coffee To Water Ratio Format Invalid 錯誤！咖啡粉水比格式有誤");
+			return
+		}
+		var coffeeRatioInput = oneToCoffeeRatioInput.value;
+		if (coffeeRatioInput == 0) {
+			window.alert("Error! Coffee Weight Format Invalid 錯誤！咖啡粉水比格式有誤");
+			return
+		}
+	} else {
+		let coffeePerLiterInput = document.getElementById("coffeePerLiterInput");
+		if (!coffeePerLiterInput.checkValidity()) {
+			window.alert("Error! Coffee To Water Ratio Format Invalid 錯誤！咖啡粉水比格式有誤");
+			return
+		}
+		var coffeeRatioInput = coffeePerLiterInput.value;
+		if (coffeeRatioInput == 0) {
+			window.alert("Error! Coffee Weight Format Invalid 錯誤！咖啡粉水比格式有誤");
+			return
+		}
+		var coffeeRatioInput = 1000 / coffeeRatioInput;
+	}
+
+	let firstStageWater = document.getElementById("firstStageWater");
+	var firstStageWaterInput = firstStageWater.value;
+	
+	var steamingWaterAmount = coffeeWeightInput * 2;
+	var firstStageWaterAmount = coffeeWeightInput * coffeeRatioInput * firstStageWaterInput / 100;
+	var secondStageWaterAmount = coffeeWeightInput * coffeeRatioInput;
+	
+	if(firstStageWaterAmount < steamingWaterAmount) {
+		firstStageWaterAmount = steamingWaterAmount
+	}
+	
+	if(secondStageWaterAmount < firstStageWaterAmount) {
+		secondStageWaterAmount = firstStageWaterAmount
+	}
+	
+	let steamingWaterOutput = document.getElementById("steamingWaterResults");
+	steamingWaterOutput.textContent = steamingWaterAmount;
+	
+	let firstStageWaterOutput = document.getElementById("firstStageWaterResults");
+	firstStageWaterOutput.textContent = firstStageWaterAmount;
+	
+	let secondStageWaterOutput = document.getElementById("secondStageWaterResults");
+	secondStageWaterOutput.textContent = secondStageWaterAmount;
+}
+
+</script>
+
+</body>
+</html>
