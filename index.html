@@ -47,19 +47,19 @@
 <p>Blooming Stage 悶蒸水量</p>
 <p>
 <span>Up To 至 </span>
-<span style="font-size:2em;" id="steamingWaterResults">0</span> g 克
+<span style="font-size:2em;" id="steamingWaterResults">0.0</span> g 克
 </p>
 
 <p>First Pour Stage 第一段水量</p>
 <p>
 <span>Up To 至 </span>
-<span style="font-size:2em;" id="firstStageWaterResults">0</span> g 克
+<span style="font-size:2em;" id="firstStageWaterResults">0.0</span> g 克
 </p>
 
 <p>Second Pour Stage 第二段水量</p>
 <p>
 <span>Up To 至 </span>
-<span style="font-size:2em;" id="secondStageWaterResults">0</span> g 克
+<span style="font-size:2em;" id="secondStageWaterResults">0.0</span> g 克
 </p>
 </fieldset>
 
@@ -122,6 +122,15 @@ function ClearData() {
 
 	let firstStageWaterValue = document.getElementById("firstStageWaterValue");
 	firstStageWaterValue.textContent = "0";
+	
+	let steamingWaterResults = document.getElementById("steamingWaterResults");
+	steamingWaterResults.textContent = "0.0";
+	
+	let firstStageWaterResults = document.getElementById("firstStageWaterResults");
+	firstStageWaterResults.textContent = "0.0";
+	
+	let secondStageWaterResults = document.getElementById("secondStageWaterResults");
+	secondStageWaterResults.textContent = "0.0";
 }
 
 function ExecuteCalculation() {
