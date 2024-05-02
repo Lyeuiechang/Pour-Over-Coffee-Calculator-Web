@@ -10,17 +10,27 @@
 <fieldset>
 <legend><h2>Parameters 參數設定</h2></legend>
 
-<label for="coffeeWeight">Coffee Weight 咖啡豆重量</label>
-<input type="number" id="coffeeWeight" name="coffeeWeight"> g 克 <br><br>
-
-<p>Coffee To Water Ratio 咖啡粉水比</p>
-  <input type="radio" id="oneToCoffeeRatio" name="coffeeRatio" value="oneToCoffeeRatio" checked="checked">
-  <label for="oneToCoffeeRatio">One Coffee To How Many Water 幾克粉多少水</label> 1 : <input type="number" id="oneToCoffeeRatioInput" name="oneToCoffeeRatioInput"><br><br>
-  <input type="radio" id="coffeePerLiter" name="coffeeRatio" value="coffeePerLiter">
-  <label for="coffeePerLiter">How Many Coffee Per Liter Water 每公升多少水 </label><input type="number" id="coffeePerLiterInput" name="coffeePerLiterInput"> g / 1 L Water 克 / 1 公升水 <br><br>
- 
-<label for="firstStageWater">First Stage Water Percentage 第一次注水量</label>
-<input type="range" value="0" min="0" max="100" step="5" oninput="this.nextElementSibling.value = this.value" id="firstStageWater" name="firstStageWater" style="font-size:2em;"> <output id="firstStageWaterValue">0</output> % <br><br>
+<form>
+  <label>
+    <span>Coffee Weight 咖啡豆重量</span>
+	<input type="number" id="coffeeWeight" name="coffeeWeight"> g 克 <br><br>
+  </label>
+  <p>Coffee To Water Ratio 咖啡粉水比</p>
+  <label>
+    <input onclick="document.getElementById('oneToCoffeeRatioInput').disabled = false; document.getElementById('coffeePerLiterInput').disabled = true;" type="radio" id="oneToCoffeeRatio" name="coffeeRatio" value="oneToCoffeeRatio" checked="checked">
+    <span>One Coffee To How Many Water 幾克粉多少水</span>
+	 1 : <input type="number" id="oneToCoffeeRatioInput" name="oneToCoffeeRatioInput"><br><br>
+  </label>
+  <label>
+    <input onclick="document.getElementById('coffeePerLiterInput').disabled = false; document.getElementById('oneToCoffeeRatioInput').disabled = true;" type="radio" id="coffeePerLiter" name="coffeeRatio" value="coffeePerLiter">
+    <span>How Many Coffee Per Liter Water 每公升多少水</span>
+	<input type="number" id="coffeePerLiterInput" name="coffeePerLiterInput" disabled=true> g / 1 L Water 克 / 1 公升水 <br><br>
+  </label>
+  <label>
+    <span>First Stage Water Percentage 第一次注水量</span>
+	<input type="range" value="0" min="0" max="100" step="5" oninput="this.nextElementSibling.value = this.value" id="firstStageWater" name="firstStageWater"> <output id="firstStageWaterValue">0</output> % <br><br>
+  </label>
+</form>
 
 </fieldset>
 
@@ -170,13 +180,13 @@ function ExecuteCalculation() {
 	}
 	
 	let steamingWaterOutput = document.getElementById("steamingWaterResults");
-	steamingWaterOutput.textContent = steamingWaterAmount;
+	steamingWaterOutput.textContent = steamingWaterAmount.toFixed(1);
 	
 	let firstStageWaterOutput = document.getElementById("firstStageWaterResults");
-	firstStageWaterOutput.textContent = firstStageWaterAmount;
+	firstStageWaterOutput.textContent = firstStageWaterAmount.toFixed(1);
 	
 	let secondStageWaterOutput = document.getElementById("secondStageWaterResults");
-	secondStageWaterOutput.textContent = secondStageWaterAmount;
+	secondStageWaterOutput.textContent = secondStageWaterAmount.toFixed(1);
 }
 
 </script>
