@@ -14,18 +14,18 @@
 <form>
   <label>
     <span>Coffee Weight 咖啡豆重量</span>
-	<input type="number" id="coffeeWeight" name="coffeeWeight" placeholder="How Many Coffee 幾克咖啡豆" size="27"> g 克 <br><br>
+	<input type="number" id="coffeeWeight" name="coffeeWeight" placeholder="Coffee 幾克咖啡豆"> g 克 <br><br>
   </label>
   <p>Coffee To Water Ratio 咖啡粉水比</p>
   <label>
     <input onclick="document.getElementById('oneToCoffeeRatioInput').disabled = false; document.getElementById('coffeePerLiterInput').disabled = true;" type="radio" id="oneToCoffeeRatio" name="coffeeRatio" value="oneToCoffeeRatio" checked="checked">
     <span>One Coffee To How Many Water 幾克粉多少水</span>
-	 1 : <input type="number" id="oneToCoffeeRatioInput" name="oneToCoffeeRatioInput" placeholder="How Many Water 一克粉幾克水" size="27"><br><br>
+	 1 : <input type="number" id="oneToCoffeeRatioInput" name="oneToCoffeeRatioInput" placeholder="Water 一克粉幾克水"><br><br>
   </label>
   <label>
     <input onclick="document.getElementById('coffeePerLiterInput').disabled = false; document.getElementById('oneToCoffeeRatioInput').disabled = true;" type="radio" id="coffeePerLiter" name="coffeeRatio" value="coffeePerLiter">
     <span>How Many Coffee Per Liter Water 每公升多少水</span>
-	<input type="number" id="coffeePerLiterInput" name="coffeePerLiterInput" placeholder="How Many Coffee 幾克咖啡豆" size="27" disabled=true> g / 1 L Water 克 / 1 公升水 <br><br>
+	<input type="number" id="coffeePerLiterInput" name="coffeePerLiterInput" placeholder="Coffee 幾克咖啡豆" disabled=true> g / 1 L Water 克 / 1 公升水 <br><br>
   </label>
   <label>
     <span>First Stage Water Percentage 第一次注水量</span>
