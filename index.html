@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>Pour Over Coffee Calculator 手沖咖啡計算機</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" charset=utf-8>
 </head>
 <body>
 
@@ -14,22 +14,30 @@
 <form>
   <label>
     <span>Coffee Weight 咖啡豆重量</span>
-	<input type="number" id="coffeeWeight" name="coffeeWeight" placeholder="Coffee 幾克咖啡豆"> g 克 <br><br>
+	<input type="number" id="coffeeWeight" name="coffeeWeight" step="any" min=0 placeholder="Coffee 幾克咖啡豆"> g 克 <br><br>
   </label>
   <p>Coffee To Water Ratio 咖啡粉水比</p>
   <label>
     <input onclick="document.getElementById('oneToCoffeeRatioInput').disabled = false; document.getElementById('coffeePerLiterInput').disabled = true;" type="radio" id="oneToCoffeeRatio" name="coffeeRatio" value="oneToCoffeeRatio" checked="checked">
     <span>One Coffee To How Many Water 幾克粉多少水</span>
-	 1 : <input type="number" id="oneToCoffeeRatioInput" name="oneToCoffeeRatioInput" placeholder="Water 一克粉幾克水"><br><br>
+	 1 : <input type="number" id="oneToCoffeeRatioInput" name="oneToCoffeeRatioInput" step="any" min=0 placeholder="Water 一克粉幾克水"><br><br>
   </label>
   <label>
     <input onclick="document.getElementById('coffeePerLiterInput').disabled = false; document.getElementById('oneToCoffeeRatioInput').disabled = true;" type="radio" id="coffeePerLiter" name="coffeeRatio" value="coffeePerLiter">
     <span>How Many Coffee Per Liter Water 每公升多少水</span>
-	<input type="number" id="coffeePerLiterInput" name="coffeePerLiterInput" placeholder="Coffee 幾克咖啡豆" disabled=true> g / 1 L Water 克 / 1 公升水 <br><br>
+	<input type="number" id="coffeePerLiterInput" name="coffeePerLiterInput" step="any" min=0 placeholder="Coffee 幾克咖啡豆" disabled=true> g / 1 L Water 克 / 1 公升水 <br><br>
   </label>
   <label>
     <span>First Stage Water Percentage 第一次注水量</span>
 	<input type="range" value="0" min="0" max="100" step="5" oninput="this.nextElementSibling.value = this.value" id="firstStageWater" name="firstStageWater"> <output id="firstStageWaterValue">0</output> % <br><br>
+  </label>
+  <label>
+	<input onclick="EnableIcedCoffeeSetting()" type="checkbox" id="enableIcedCoffee" name="enableIcedCoffee">
+    <span>Japanese Style Iced Filter Coffee 日式冰手沖咖啡</span><br><br>
+  </label>
+  <label id="hotWaterLabel" style="display:none;">
+    <span>Hot Water Percentage 熱水比例</span>
+	<input type="range" value="0" min="0" max="100" step="5" oninput="this.nextElementSibling.value = this.value" id="hotWaterPortion" name="hotWaterPortion"> <output id="hotWaterPortionValue">0</output> % <br><br>
   </label>
 </form>
 
@@ -48,23 +56,38 @@
 
 <fieldset>
 <legend><h2>Calculation Results 計算結果</h2></legend>
-<p>Blooming Stage 悶蒸水量</p>
-<p>
-<span>Up To 至 </span>
-<span style="font-size:2em;" id="steamingWaterResults">0.0</span> g 克
-</p>
+<div id="decanterIceCubeDiv" style="display:none;">
+	<p>Ice Cube In Decanter 下壺冰塊量</p>
+	<p>
+	<span>Put 放 </span>
+	<span style="font-size:2em;" id="decanterIceCube">0.0</span> g 克
+	</p>
+	<hr>
+</div>
 
-<p>First Pour Stage 第一段水量</p>
-<p>
-<span>Up To 至 </span>
-<span style="font-size:2em;" id="firstStageWaterResults">0.0</span> g 克
-</p>
+<div>
+	<p>Blooming Stage 悶蒸水量</p>
+	<p>
+	<span>Up To 至 </span>
+	<span style="font-size:2em;" id="steamingWaterResults">0.0</span> g 克
+	</p>
+</div>
 
-<p>Second Pour Stage 第二段水量</p>
-<p>
-<span>Up To 至 </span>
-<span style="font-size:2em;" id="secondStageWaterResults">0.0</span> g 克
-</p>
+<div>
+	<p>First Pour Stage 第一段水量</p>
+	<p>
+	<span>Up To 至 </span>
+	<span style="font-size:2em;" id="firstStageWaterResults">0.0</span> g 克
+	</p>
+</div>
+
+<div>
+	<p>Second Pour Stage 第二段水量</p>
+	<p>
+	<span>Up To 至 </span>
+	<span style="font-size:2em;" id="secondStageWaterResults">0.0</span> g 克
+	</p>
+</div>
 </fieldset>
 
 <br><br>
@@ -74,9 +97,32 @@
 
 <fieldset>
 <legend><h2>Calculation Equation 計算公式</h2></legend>
+<p id="decanterIceCubeEquation" style="display:none;">Ice Cube In Decanter 下壺冰塊量 = Coffee Weight 咖啡豆重量 * Coffee To Water Ratio 粉水比 * (100 - Hot Water Percentage 熱水比例) * 100%</p>
 <p>Blooming Stage 悶蒸水量 = Coffee Weight 咖啡豆重量 * 2</p>
-<p>First Pour Stage 第一段水量 = Coffee Weight 咖啡豆重量 * Coffee To Water Ratio 粉水比 * First Stage Water Percentage 第一次注水量 * 100%</p>
-<p>Second Pour Stage 第二段水量 = Coffee Weight 咖啡豆重量 * Coffee To Water Ratio 粉水比</p>
+<p id="firstStageWaterResultsEquation">First Pour Stage 第一段水量 = Coffee Weight 咖啡豆重量 * Coffee To Water Ratio 粉水比 * First Stage Water Percentage 第一次注水量 * 100%</p>
+<p id="secondStageWaterResultsEquation">Second Pour Stage 第二段水量 = Coffee Weight 咖啡豆重量 * Coffee To Water Ratio 粉水比</p>
+</fieldset>
+
+<br><br>
+
+<hr>
+
+<fieldset>
+<legend><h2>References 參考資料</h2></legend>
+<p>James Hoffmann - The Ultimate V60 Technique <a href="https://youtu.be/AI4ynXzkSQo" target="_blank" rel="noreferrer noopener">https://youtu.be/AI4ynXzkSQo</a></p>
+<p id="icedFilterCoffeeReference" target="_blank" rel="noreferrer noopener" style="display:none;">James Hoffmann - Better than cold brew: How to make iced filter coffee <a href="https://youtu.be/PApBycDrPo0">https://youtu.be/PApBycDrPo0</a></p>
+</fieldset>
+
+<br><br>
+
+<hr>
+
+<fieldset>
+<legend><h2>Change Log 版本紀錄</h2></legend>
+<p>Version 版本: 0.2 (May 05, 2024 / 2024年05月05日)</p>
+<p>Add Iced Filter Coffee Function 增加冰手沖功能</p><br>
+<p>Version 版本: 0.1 (May 01, 2024 / 2024年05月01日)</p>
+<p>Inital Release 初始版本</p>
 </fieldset>
 
 <br><br>
@@ -86,22 +132,63 @@
 <fieldset>
 <legend><h2>About This App 關於此應用</h2></legend>
 <p>Pour Over Coffee Calculator 手沖咖啡計算機</p>
-<p>The Joy of Pour Over Coffee For Everyone To Enjoy 讓每個人都能享受手沖咖啡的樂趣</p>
-<p>Version 版本號：0.1 (May 01, 2024 / 2024年05月01日)</p>
-<p>Inital Release 初始版本</p>
+<p>The Joy of Pour Over Coffee For Everyone To Enjoy 讓每個人都能享受手沖咖啡的樂趣</p><br>
+<p>Author 作者: Lyeuiechang</p><br>
+<p>Version 版本號: 0.2 (May 05, 2024 / 2024年05月05日)</p>
+<p>Add Iced Filter Coffee Function 增加冰手沖功能</p><br>
+
+<p>Github Page 頁面: Pour-Over-Coffee-Calculator-Web <a href="https://github.com/Lyeuiechang/Pour-Over-Coffee-Calculator-Web" target="_blank" rel="noreferrer noopener">https://github.com/Lyeuiechang/Pour-Over-Coffee-Calculator-Web</a></p><br>
 </fieldset>
 
 <script>
 
+function EnableIcedCoffeeSetting () {
+	var enableIcedCoffee = document.getElementById("enableIcedCoffee");
+	var hotWaterLabel = document.getElementById("hotWaterLabel");
+	var decanterIceCubeDiv = document.getElementById("decanterIceCubeDiv");
+	var icedFilterCoffeeReference = document.getElementById("icedFilterCoffeeReference");
+
+	var decanterIceCubeEquation = document.getElementById("decanterIceCubeEquation");
+	var firstStageWaterResultsEquation = document.getElementById("firstStageWaterResultsEquation");
+	var secondStageWaterResultsEquation = document.getElementById("secondStageWaterResultsEquation");
+
+	if (enableIcedCoffee.checked) {
+		hotWaterLabel.style.display = "block"
+		decanterIceCubeDiv.style.display = "block"
+		decanterIceCubeEquation.style.display = "block"
+		icedFilterCoffeeReference.style.display = "block"
+
+		firstStageWaterResultsEquation.textContent = "First Pour Stage 第一段水量 = Coffee Weight 咖啡豆重量 * Coffee To Water Ratio 粉水比 * First Stage Water Percentage 第一次注水量 * 100% * Hot Water Percentage 熱水比例 * 100%"
+		secondStageWaterResultsEquation.textContent = "Second Pour Stage 第二段水量 = Coffee Weight 咖啡豆重量 * Coffee To Water Ratio 粉水比 * Hot Water Percentage 熱水比例 * 100%"
+	} else {
+		hotWaterLabel.style.display = "none"
+		decanterIceCubeDiv.style.display = "none"
+		decanterIceCubeEquation.style.display = "none"
+		icedFilterCoffeeReference.style.display = "none"
+
+		firstStageWaterResultsEquation.textContent = "First Pour Stage 第一段水量 = Coffee Weight 咖啡豆重量 * Coffee To Water Ratio 粉水比 * First Stage Water Percentage 第一次注水量 * 100%"
+		secondStageWaterResultsEquation.textContent = "Second Pour Stage 第二段水量 = Coffee Weight 咖啡豆重量 * Coffee To Water Ratio 粉水比"
+	}
+}
+
 function RecommendSettings() {
 	var coffeeRatioChoice = document.querySelector('input[name="coffeeRatio"]:checked').value;
+	var enableIcedCoffee = document.getElementById("enableIcedCoffee");
 	
 	if (coffeeRatioChoice == "oneToCoffeeRatio") {
 		let oneToCoffeeRatioInput = document.getElementById("oneToCoffeeRatioInput");
-		oneToCoffeeRatioInput.value = "16";
+		if (enableIcedCoffee.checked) {
+			oneToCoffeeRatioInput.value = "15";
+		} else {
+			oneToCoffeeRatioInput.value = "16";
+		}
 	} else {
 		let coffeePerLiterInput = document.getElementById("coffeePerLiterInput");
-		coffeePerLiterInput.value = "60";
+		if (enableIcedCoffee.checked) {
+			coffeePerLiterInput.value = "65";
+		} else {
+			coffeePerLiterInput.value = "60";
+		}
 	}
 
 	let firstStageWater = document.getElementById("firstStageWater");
@@ -109,6 +196,14 @@ function RecommendSettings() {
 
 	let firstStageWaterValue = document.getElementById("firstStageWaterValue");
 	firstStageWaterValue.textContent = "60";
+
+	if (enableIcedCoffee.checked) {
+		let hotWaterPortion = document.getElementById("hotWaterPortion");
+		hotWaterPortion.value = "60";
+
+		let hotWaterPortionValue = document.getElementById("hotWaterPortionValue");
+		hotWaterPortionValue.textContent = "60";
+	}
 }
 
 function ClearData() {
@@ -126,6 +221,15 @@ function ClearData() {
 
 	let firstStageWaterValue = document.getElementById("firstStageWaterValue");
 	firstStageWaterValue.textContent = "0";
+
+	let hotWaterPortion = document.getElementById("hotWaterPortion");
+	hotWaterPortion.value = "0";
+
+	let hotWaterPortionValue = document.getElementById("hotWaterPortionValue");
+	hotWaterPortionValue.textContent = "0";
+
+	let decanterIceCube = document.getElementById("decanterIceCube");
+	decanterIceCube.textContent = "0.0";
 	
 	let steamingWaterResults = document.getElementById("steamingWaterResults");
 	steamingWaterResults.textContent = "0.0";
@@ -151,6 +255,7 @@ function ExecuteCalculation() {
 	}
 	
 	var coffeeRatioChoice = document.querySelector('input[name="coffeeRatio"]:checked').value;
+	var enableIcedCoffee = document.getElementById("enableIcedCoffee");
 	
 	if(coffeeRatioChoice == "oneToCoffeeRatio") {
 		let oneToCoffeeRatioInput = document.getElementById("oneToCoffeeRatioInput");
@@ -179,10 +284,22 @@ function ExecuteCalculation() {
 
 	let firstStageWater = document.getElementById("firstStageWater");
 	var firstStageWaterInput = firstStageWater.value;
-	
+
 	var steamingWaterAmount = coffeeWeightInput * 2;
-	var firstStageWaterAmount = coffeeWeightInput * coffeeRatioInput * firstStageWaterInput / 100;
-	var secondStageWaterAmount = coffeeWeightInput * coffeeRatioInput;
+
+	if (enableIcedCoffee.checked) {
+		let hotWaterPortion = document.getElementById("hotWaterPortion");
+		var hotWaterPortionInput = hotWaterPortion.value;
+		var decanterIceCubeAmount = coffeeWeightInput * coffeeRatioInput * (100 - hotWaterPortionInput) / 100;
+		var firstStageWaterAmount = coffeeWeightInput * coffeeRatioInput * firstStageWaterInput / 100 * hotWaterPortionInput / 100;
+		var secondStageWaterAmount = coffeeWeightInput * coffeeRatioInput * hotWaterPortionInput / 100;
+
+		let decanterIceCubeOutput = document.getElementById("decanterIceCube");
+		decanterIceCubeOutput.textContent = decanterIceCubeAmount.toFixed(1);
+	} else {
+		var firstStageWaterAmount = coffeeWeightInput * coffeeRatioInput * firstStageWaterInput / 100;
+		var secondStageWaterAmount = coffeeWeightInput * coffeeRatioInput;
+	}
 	
 	if(firstStageWaterAmount < steamingWaterAmount) {
 		firstStageWaterAmount = steamingWaterAmount
